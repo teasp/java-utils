@@ -1,0 +1,103 @@
+public class ByteUtils {
+	private ByteUtils(){}
+	
+	public static final String getHexStr(byte[] arr){
+		StringBuffer strBuf = new StringBuffer();
+		
+		String s;
+		for (byte b : arr) {
+			s = Integer.toHexString(0xff & b);
+			if(s.length() == 1){
+				strBuf.append('0');
+			}
+			strBuf.append(s);
+		}
+		return strBuf.toString();
+	}
+	
+	public static final byte[] short2Bytes(short s) {
+		byte[] byteArray = new byte[2];
+		
+		for (int i=0; i<2; i++) {
+			byteArray[i]=(byte)(s>>(8-8*i));
+		}
+		return byteArray;
+	}
+	
+	public static final short bytes2Short(byte[] bb) {
+		return bytes2Short(bb, 0);
+	}
+	public static final short bytes2Short(byte[] bb, int index) {
+		if (bb == null || bb.length-index < 2) {
+			throw new RuntimeException("bb=" + Arrays.toString(bb));
+		}
+		return (short)((((int)bb[index + 0] & 0xff) << 8) | (((int)bb[index + 1] & 0xff) << 0));
+	}
+	
+	public static final long bytes2Long(byte[] bb) {
+		return bytes2Long(bb, 0);
+	}
+	public static final long bytes2Long(byte[] bb, int index) {
+		if (bb == null || bb.length-index < 8) {
+			throw new RuntimeException("bb=" + Arrays.toString(bb));
+		}
+		return ((((long) bb[index + 0] & 0xff) << 56)  
+                | (((long) bb[index + 1] & 0xff) << 48)  
+                | (((long) bb[index + 2] & 0xff) << 40)  
+                | (((long) bb[index + 3] & 0xff) << 32)  
+                | (((long) bb[index + 4] & 0xff) << 24)  
+                | (((long) bb[index + 5] & 0xff) << 16)  
+                | (((long) bb[index + 6] & 0xff) << 8) 
+                | (((long) bb[index + 7] & 0xff) << 0));
+	}
+	
+	public static final byte[] long2Bytes(long l) {
+		byte[] byteArray = new byte[8];
+		
+		for (int i=0; i<8; i++) {
+			byteArray[i]=(byte)(l>>(56-8*i));
+		}
+
+        return byteArray;
+	}
+	
+	public static final byte[] int2Bytes(int n) {
+		byte[] byteArray = new byte[4];
+		for (int i=0; i<4; i++) {
+			byteArray[i]=(byte)(n>>(24-8*i));
+		}
+		return byteArray;
+	}
+	
+	public static final int bytes2Int(byte[] bb) {
+		return bytes2Int(bb, 0);
+	}
+	public static final int bytes2Int(byte[] bb, int index) {
+		if (bb == null || bb.length-index < 4) {
+			throw new RuntimeException("bb=" + Arrays.toString(bb));
+		}
+		return (((bb[index + 0] & 0xff) << 24)   
+                | ((bb[index + 1] & 0xff) << 16)  
+                | ((bb[index + 2] & 0xff) << 8) 
+                | ((bb[index + 3] & 0xff) << 0));
+	}
+	
+	public static void main(String[] args) {
+		long l = 13530598094l;
+		byte[] ba = long2Bytes(l);
+		long r = bytes2Long(ba, 0);
+		System.out.println("r = " + r);
+		
+		System.out.println("(byte)(0x101)=" + ((byte)0x101));
+		
+		byte[] sb = new byte[2];
+		sb[0] = (byte)0x78;
+		sb[1] = (byte)0x81;
+		System.out.println("sb in short is : " + bytes2Short(sb, 0));
+		
+		int i= 123456789;
+		byte[] ia = int2Bytes(i);
+		int ir = bytes2Int(ia, 0);
+		System.out.println("ir = " + ir);
+	}
+}
